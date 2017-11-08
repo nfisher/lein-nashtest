@@ -87,8 +87,8 @@ Ran 1 tests containing 12 assertions.
 
 ## Planned Work
 
-* ~~Introduce `:test-main` which would use Clojure style references (e.g. `jbx.runner/run`).~~ [#1]()
-* ~~File watcher.~~ [#2]()
+* ~~Introduce `:test-main` which would use Clojure style references (e.g. `jbx.runner/run`).~~ [#1](https://github.com/nfisher/lein-nashtest/issues/1)
+* ~~File watcher.~~ [#2](https://github.com/nfisher/lein-nashtest/issues/2)
 * Naive document.write and <script> to allow an unoptimised CLJS build.
-* Inject cljs.test/report defmethod from runner. [#3]()
+* Inject cljs.test/report defmethod from runner. [#3](https://github.com/nfisher/lein-nashtest/issues/3)
 * JUnit XML output.
