@@ -1,7 +1,4 @@
-# lein-nashtest
-
-#### Latest version
-[![Clojars Project](https://img.shields.io/clojars/v/lein-nashtest.svg)](https://clojars.org/lein-nashtest)
+# lein-nashtest [![Clojars Project](https://img.shields.io/clojars/v/lein-nashtest.svg)](https://clojars.org/lein-nashtest)
 
 Run CLJS tests in nashorn using cljs.test report hooks.
 
