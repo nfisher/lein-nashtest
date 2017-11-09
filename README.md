@@ -11,7 +11,7 @@ nashtest has two primary goals;
 ## Limitations
 
 * ECMAScript support is limited to Nashorns capabilities.
-  * DOM support is not available.
+  * DOM support is not available (e.g. document.* is absent).
   * XMLHTTPRequest is not available.
   * Timers are not available.
   * Optimal target is ECMAScript 5.1.
@@ -22,12 +22,28 @@ Happy to accept PR's if people want to provide shims.
 
 * Java 8.
 * Leiningen 2.7.1+.
-* lein-cljsbuild 1.1.7+.
+* whitespace compiled Javascript output file.
 
 ## Basic Usage
 
+#### Single Execution
+Single execution is intended for use in CI or as a precommit verification. If there are test failures the exit code will be 1, if all is green it will be 0.
+
 ```
 $ lein nashtest
+
+Testing jbx.events-test
+
+Ran 1 tests containing 12 assertions.
+0 failures, 0 errors.
+```
+
+#### Watch Loop Execution
+Watch loop execution is intended for continuous feedback during development. A change to the :load-js file will result in automatic execution of the whole test suite.
+
+```
+$ lein nashtest watch
+Watching for changes to test.js
 
 Testing jbx.events-test
 
@@ -40,10 +56,10 @@ Ran 1 tests containing 12 assertions.
 1) Add the plugin to your leiningen `project.clj` file.
 
 ```clj
-  :plugins [[lein-nashtest "0.1.0-SNAPSHOT"]]
+  :plugins [[lein-nashtest "0.1.3"]]
 ```
 
-2) Configure your cljsbuilt test target in `project.clj`.
+2) Configure your cljsbuild test target in `project.clj`.
 
 ```clj
    :cljsbuild [{:id "test"
@@ -57,13 +73,13 @@ Ran 1 tests containing 12 assertions.
                            :output-to  "target/cljsbuild/public/js/test.js"
                            :cache-analysis true}]
 ```
-**Note**: Whitespace optimisation is required because document.write()
+**Note**: Whitespace optimisation is required because document.write().
 
 3) Configure nashtest as a root key in `project.clj`.
 
 ```clj
   :nashtest {:load-js "test.js"
-             :runner "jbx.gwp.runner.run()"}
+             :test-main "jbx.gwp.runner/run"}
 ```
 
 4) Create a cljs.test runner.
@@ -74,21 +90,18 @@ Ran 1 tests containing 12 assertions.
     [cljs.test :as t :include-macros true]
     [jbx.events-test]))
 
-(defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
-  (if (cljs.test/successful? m)
-    (js/exit)
-    (js/exit 1)))
-
 (defn ^:export run
   []
   (enable-console-print!)
   (t/run-all-tests #"jbx.*-test"))
 ```
+**Note**: nashtest uses :test-main or :runner and will call your exported function as part of the test cycle. Do not include a call to the function at the bottom of your runner file.
 
 ## Planned Work
 
-* ~~Introduce `:test-main` which would use Clojure style references (e.g. `jbx.runner/run`).~~ [#1](https://github.com/nfisher/lein-nashtest/issues/1)
-* ~~File watcher.~~ [#2](https://github.com/nfisher/lein-nashtest/issues/2)
-* Naive document.write and <script> to allow an unoptimised CLJS build.
-* Inject cljs.test/report defmethod from runner. [#3](https://github.com/nfisher/lein-nashtest/issues/3)
-* JUnit XML output.
+1. ~~Introduce `:test-main` which would use Clojure style references (e.g. `jbx.runner/run`).~~ [#1](https://github.com/nfisher/lein-nashtest/issues/1)
+1. ~~File watcher.~~ [#2](https://github.com/nfisher/lein-nashtest/issues/2)
+1. ~~Inject cljs.test/report defmethod from runner.~~ [#3](https://github.com/nfisher/lein-nashtest/issues/3)
+1. Allow for multiple nashtest ids/targets.
+1. JUnit XML output.
+1. Naive document.write and <script> to allow an unoptimised CLJS build.
