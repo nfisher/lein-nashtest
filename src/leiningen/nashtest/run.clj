@@ -24,6 +24,17 @@ var console = {
   trace: printer('[TRACE] ')
 };")
 
+(defonce cljstest-defmethod "
+goog.provide('jbx.def');
+cljs.core._add_method.call(null,cljs.test.report,new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(\"cljs.test\",\"default\",\"cljs.test/default\",-1581405322),new cljs.core.Keyword(null,\"end-run-tests\",\"end-run-tests\",267300563)], null),(function (m){
+if(cljs.core.truth_(cljs.test.successful_QMARK_.call(null,m))){
+return exit((0));
+} else {
+return exit((1));
+}
+}));
+")
+
 (defn once
   "once loads and executes the runner specified by load-js."
   ([load-js runner exit?]
@@ -33,6 +44,7 @@ var console = {
        (when-not exit?
          (.eval engine "function exit(rc) { console.log('--');};"))
        (.eval engine (str "load('" load-js "');"))
+       (.eval engine cljstest-defmethod)
        (.eval engine runner))
      (catch ScriptException se
        (.printStackTrace se)))))
