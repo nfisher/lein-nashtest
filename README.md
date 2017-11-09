@@ -26,7 +26,8 @@ Happy to accept PR's if people want to provide shims.
 
 ## Basic Usage
 
-#### Single Execution
+#### Single Execution
+
 Single execution is intended for use in CI or as a precommit verification. If there are test failures the exit code will be 1, if all is green it will be 0.
 
 ```
@@ -38,7 +39,8 @@ Ran 1 tests containing 12 assertions.
 0 failures, 0 errors.
 ```
 
-#### Watch Loop Execution
+#### Watch Loop Execution
+
 Watch loop execution is intended for continuous feedback during development. A change to the :load-js file will result in automatic execution of the whole test suite.
 
 ```
