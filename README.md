@@ -22,7 +22,7 @@ Happy to accept PR's if people want to provide shims.
 
 * Java 8.
 * Leiningen 2.7.1+.
-* whitespace compiled Javascript output file.
+* lein-cljsbuild 1.1.7+. (whitespace optimised target)
 
 ## Basic Usage
 
@@ -70,21 +70,14 @@ Ran 1 tests containing 12 assertions.
                 :compiler {:language-in :ecmascript5-strict
                            :language-out :ecmascript5-strict
                            :optimizations :whitespace
-                           :main jbx.gwp.runner
+                           :main jbx.runner
                            :asset-path "js/test"
                            :output-to  "target/cljsbuild/public/js/test.js"
                            :cache-analysis true}]
 ```
 **Note**: Whitespace optimisation is required because document.write().
 
-3) Configure nashtest as a root key in `project.clj`.
-
-```clj
-  :nashtest {:load-js "test.js"
-             :test-main "jbx.gwp.runner/run"}
-```
-
-4) Create a cljs.test runner.
+3) Create a cljs.test runner.
 
 ```clj
 (ns jbx.runner
@@ -97,7 +90,15 @@ Ran 1 tests containing 12 assertions.
   (enable-console-print!)
   (t/run-all-tests #"jbx.*-test"))
 ```
+
 **Note**: nashtest uses :test-main or :runner and will call your exported function as part of the test cycle. Do not include a call to the function at the bottom of your runner file.
+
+4) Configure nashtest with a root key in `project.clj`.
+
+```clj
+  :nashtest {:load-js "test.js"
+             :test-main "jbx.runner/run"}
+```
 
 ## Planned Work
 
