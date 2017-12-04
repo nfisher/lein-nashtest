@@ -26,7 +26,7 @@
                            :cache-analysis true}}
                {:id "figtest"
                  :source-paths ["cljs"]
-                 :figwheel true
+                 :figwheel {:on-jsload "jbx.runner/run"}
                  :compiler {:language-in :ecmascript5-strict
                             :language-out :ecmascript5-strict
                             :optimizations :none
