@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIElEQVQ4T2NMS0v7z0ABYBw1gGE0DBhGwwCYh4ZBOgAAcQUjIUXh8RYAAAAASUVORK5CYII=" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+    <style>
+    body {
+      background-color: rgb(253, 246, 227);
+      color: #444;
+      margin:0 auto;
+      position:relative;
+      width:960px;
+    }
+    pre {
+      font-family: 'Ubuntu Mono', monospace;
+      font-family: 'Source Code Pro', monospace;
+      margin-top:0;
+      padding:0 12px;
+    }
+    </style>
+  </head>
+  <body>
+    <pre id="console"></pre>
+  </body>
+  <script src="js/test.js" type="text/javascript"></script>
+  <script>
+  "use strict";
+  var run = jbx.runner.run;
+  var re = /^\d+ failures, \d+ errors.$/;
+  var pre = document.getElementById('console');
+
+  document.addEventListener('DOMContentLoaded', function () {
+      if (!Notification) {
+        console.log('Desktop notifications not available in your browser. Try Chromium.');
+        return;
+      }
+
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+  });
+
+  function notify(title, body, icon) {
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    } else {
+      var attr = {
+        icon: icon,
+        body: body,
+      };
+      var notification = new Notification(title, attr);
+    }
+  }
+
+  console.log = function(msg) {
+    if (msg === 'Loading!') {
+      pre.innerHTML = "";
+      run();
+      return;
+    }
+
+    if (re.test(msg)) {
+      if (msg !== '0 failures, 0 errors.') {
+        document.body.style.backgroundColor = '#dc322f';
+        document.body.style.color = '#fdf6e3';
+        notify("Build failed!", msg, 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Red_Light_Icon.svg/464px-Red_Light_Icon.svg.png');
+      } else {
+        document.body.style.backgroundColor = '#fdf6e3';
+        document.body.style.color = '#444';
+        notify('Build successful!', 'Good show ole boy!', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Green_Light_Icon.svg/464px-Green_Light_Icon.svg.png');
+      }
+    }
+    var t = document.createTextNode(msg + "\n");
+    pre.appendChild(t);
+  }
+  run();
+  </script>
+</html>

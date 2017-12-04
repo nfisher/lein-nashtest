@@ -29,7 +29,7 @@
                       kind (.kind event)
                       event-path (.resolve dir-path ctx)]]
           (when (every? true? [(not= event-overflow kind) (= event-path file-path)])
-            (on-change))) ; need to implement the cljs.test report injection.
+            (on-change)))
 
         (if (false? (.reset key))
           (lein-main/info "Directories disappeared and so am I!")
